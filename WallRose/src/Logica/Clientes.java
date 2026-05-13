@@ -16,8 +16,6 @@ public class Clientes {
 		this.nombre = nombre;
 		this.correo = correo;
 		this.idCliente = idCliente;
-		this.codigoCliente = consecutivoC;
-		consecutivoC++;
 		
 	}
 
@@ -49,9 +47,7 @@ public class Clientes {
 		this.idCliente = idCliente;
 	}
 	
-	public int getCodigoCliente() {
-	    return codigoCliente;
-	}
+
 	
 	public String toString()
 	{
