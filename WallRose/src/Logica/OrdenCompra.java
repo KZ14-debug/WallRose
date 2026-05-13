@@ -4,20 +4,29 @@ import java.time.LocalDateTime;
 
 public class OrdenCompra {
 	
+	private Clientes cliente;
 	private LocalDateTime fechaDeCompra;
 	private String estadoDeCompra;
 	private int idOrden;
 	private static int consecutivoO = 1;
 	
-	public OrdenCompra(String estadoDeCompra)
+	
+	public OrdenCompra(String estadoDeCompra, Clientes cliente)
 	{
 		this.estadoDeCompra = estadoDeCompra;
+		this.cliente = cliente;
 		fechaDeCompra = LocalDateTime.now();
 		idOrden = consecutivoO;
 		consecutivoO++;
 		
 	}
 
+	
+	public Clientes getCliente()
+	{
+	    return cliente;
+	}
+	
 	public String getEstadoDeCompra() {
 		return estadoDeCompra;
 	}

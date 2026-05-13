@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import Logica.Clientes;
 import Logica.OrdenCompra;
@@ -46,45 +47,59 @@ public class Control
         return clientes;
     }
     
-    public Clientes buscarCliente(String idCliente)
+    
+    public Clientes buscarCliente(String idCliente) throws Exception
     {
-    	 for (Clientes clien : clientes) 
-    	 {
-    	    
-    		if (clien.getIdCliente() == (idCliente)) 
-    		{
-               return clien;
-    	    }
-    		
-    	 }
-    	 return null;
+    	for (int i = 0; i < clientes.size(); i++) //Esto recorre la lista de productos uno por uno
+        {
+        	
+            if (clientes.get(i).getIdCliente() == idCliente ) 
+            {
+                return clientes.get(i); 
+            }
+            
+        }
+
+        throw new Exception("Cliente no encontrado");
+    
     }
+    
     
     public void eliminarCliente(String idCliente) throws Exception
     {
-        Clientes clien = buscarCliente(idCliente); //Esto recorre la lista de clientes hasta encontrar el mismo id que se ingreso
-
-        if (clien == null)
+    	for (int i = 0; i < clientes.size(); i++) //Esto recorre la lista de clientes uno por uno
         {
-            throw new Exception("El cliente no existe");
+        	
+            if (clientes.get(i).getIdCliente().equals(idCliente)) // Se usa .equals() porque idCliente es un String y se debe comparar el contenido del texto
+            {
+                clientes.remove(i); //Al coincidir el id ingresado con el de la lista se elimina ese cliente mediante el id
+                return;
+            }
+            
         }
 
-        clientes.remove(clien);
+        throw new Exception("Cliente no encontrado");
     }
 
 
-    public void cambiarCliente(String idCliente) throws Exception
+    public void actualizarDatosCliente(String idCliente, String nombre, String correo)  throws Exception
     {
-        Clientes clien = buscarCliente(idCliente); //Esto recorre la lista de clientes hasta encontrar el mismo id que se ingreso
-
-        if (clien == null) 
+    	
+    	for (int i = 0; i < clientes.size(); i++) //Esto recorre la lista de clientes uno por uno
         {
-            throw new Exception("El cliente no es válido");
+        	
+            if (clientes.get(i).getIdCliente().equals(idCliente)) // Se usa .equals() porque idCliente es un String y se debe comparar el contenido del texto
+            {
+            	clientes.get(i).setNombre(nombre);
+                clientes.get(i).setCorreo(correo);
+                return;
+            }
+            
         }
 
-        clienteActual = clien; // Selecciona el cliente que se busco y lo marca para que se pueda hacer el cambio correspondiente
+        throw new Exception("Cliente no encontrado");
+    
     }
-
     //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
     
     public void agregarProducto(String nombreProducto, double precio, int disponible)
@@ -97,44 +112,170 @@ public class Control
         return productos;
     }
     
-    public Producto buscarProducto(int idProducto)
+    
+    public Producto buscarProducto(int idProducto) throws Exception
     {
-    	for (Producto produc : productos) 
-   	 		{
-   	    
-    			if (produc.getIdProducto() == (idProducto)) 
-    			{
-    				return produc;
-    			}
-   		
-   	 		}
-   	 	return null;
+    	for (int i = 0; i < productos.size(); i++) //Esto recorre la lista de productos uno por uno
+        {
+        	
+            if (productos.get(i).getIdProducto() == idProducto ) 
+            {
+                return productos.get(i); 
+            }
+            
+        }
+
+        throw new Exception("Producto no encontrado");
+    
     }
     
     
     public void eliminarProducto(int idProducto) throws Exception
     {
-    	Producto produc = buscarProducto(idProducto); 
-
-        if (produc == null)
+    	for (int i = 0; i < productos.size(); i++) //Esto recorre la lista de productos uno por uno
         {
-            throw new Exception("El producto no existe");
+        	
+            if (productos.get(i).getIdProducto() == idProducto ) 
+            {
+                productos.remove(i); 
+                return;
+            }
+            
         }
 
-        productos.remove(produc);
+        throw new Exception("Producto no encontrado");
     }
 
-    public void cambiarProducto(int idProducto) throws Exception
+    public void actualizarDatosProducto(int idProducto, String nombreProducto, double precio, int disponible)  throws Exception
     {
-    	Producto produc = buscarProducto(idProducto); 
     	
-        if (produc == null) 
+    	for (int i = 0; i < productos.size(); i++) //Esto recorre la lista de clientes uno por uno
         {
-            throw new Exception("El producto no es válido");
+        	
+            if (productos.get(i).getIdProducto() == idProducto) // Se usa .equals() porque idCliente es un String y se debe comparar el contenido del texto
+            {
+            	productos.get(i).setNombreProducto(nombreProducto);
+                productos.get(i).setPrecio(precio);
+                productos.get(i).setDisponible(disponible);
+                return;
+            }
+            
         }
 
-        productoActual = produc; 
+        throw new Exception("Producto no encontrado");
+    
     }
 
-  
+    //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+    public void crearOrdenCompra(String estadoDeCompra, String idCliente) throws Exception
+    {
+    	Clientes cliente = buscarCliente(idCliente);
+
+        OrdenCompra orden = new OrdenCompra(estadoDeCompra, cliente);
+
+        ordenes.put(orden.getIdOrden(), orden);
+    }
+
+    
+    public void eliminarOrdenCompra(int idOrden) throws Exception
+    {
+
+    	if(!ordenes.containsKey(idOrden))
+		{
+			throw new Exception("El identificador de esta orden no es valido");
+		}
+		ordenes.remove(idOrden);
+    	
+    }
+
+    
+    public OrdenCompra buscarOrdenCompra(int idOrden) throws Exception
+    {
+    	if (!ordenes.containsKey(idOrden))
+        {
+            throw new Exception("Orden no encontrada");
+        }
+
+        return ordenes.get(idOrden);
+    	
+    }
+
+    
+    public Map<Integer, String> obtenerListadoOrdenesCliente(String idCliente)
+    {
+        Map<Integer, String> resultado = new TreeMap<>();
+
+        for (OrdenCompra orden : ordenes.values())
+        {
+            if (orden.getCliente().getIdCliente().equals(idCliente))
+            {
+                resultado.put(orden.getIdOrden(), orden.getEstadoDeCompra());
+            }
+        }
+
+        return resultado;
+    }
+    
+
+    public Map<Integer, String> obtenerListadoOrdenesPendientesCliente(String idCliente)
+    {
+    	Map<Integer, String> resultado = new TreeMap<>();
+
+        for (OrdenCompra orden : ordenes.values())
+        {
+        	
+            if (orden.getCliente().getIdCliente().equals(idCliente) && orden.getEstadoDeCompra().equals("Pendiente"))
+            {
+                resultado.put(orden.getIdOrden(), orden.getEstadoDeCompra());
+            }
+            
+        }
+
+        return resultado;
+    }
+
+    public Map<Integer, String> obtenerListadoOrdenesTerminadasCliente(String idCliente)
+    {
+    	Map<Integer, String> resultado = new TreeMap<>();
+
+        for (OrdenCompra orden : ordenes.values())
+        {
+        	
+            if (orden.getCliente().getIdCliente().equals(idCliente) && orden.getEstadoDeCompra().equals("Terminada"))
+            {
+                resultado.put(orden.getIdOrden(), orden.getEstadoDeCompra());
+            }
+            
+        }
+
+        return resultado;
+    }
+
+    public void establecerOrdenPendiente(int idOrden) throws Exception
+    {
+
+    	if (!ordenes.containsKey(idOrden))
+        {
+            throw new Exception("Orden no encontrada");
+        }
+
+        OrdenCompra orden = ordenes.get(idOrden);
+        orden.setEstadoDeCompra("Pendiente");
+    	
+    }
+
+    public void establecerOrdenTerminada(int idOrden) throws Exception
+    {
+
+    	if (!ordenes.containsKey(idOrden))
+        {
+            throw new Exception("Orden no encontrada");
+        }
+
+        OrdenCompra orden = ordenes.get(idOrden);
+        orden.setEstadoDeCompra("Terminada");
+    	
+    }
+
+   
 }
