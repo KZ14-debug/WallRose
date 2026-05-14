@@ -359,9 +359,7 @@ public class Control
             
 
             resultado +=  "Producto: " + d.getProducto().getNombreProducto() + "\n"
-                      + "Cantidad: " + d.getCantidad()
-                      + " | Total: " + (d.getProducto().getPrecio() * d.getCantidad())
-                      + "\n";
+                      + "Cantidad: " + d.getCantidad() + "\n";
             
         }
 
