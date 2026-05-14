@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import Logica.Clientes;
+import Logica.DetallesDeCompra;
 import Logica.OrdenCompra;
 import Logica.Producto;
 
@@ -16,15 +17,15 @@ public class Control
     private List<Clientes> clientes;
     private List<Producto> productos;
     private Map<Integer, OrdenCompra> ordenes;
+    private List<DetallesDeCompra> detalles;
 
-    private Clientes clienteActual;
-    private Producto productoActual;
     
     private Control() 
     {
         clientes = new ArrayList<>();
         productos = new ArrayList<>();
-        ordenes = new HashMap<>();
+        ordenes = new TreeMap<>();
+        detalles = new ArrayList<>();
     }
 
     public static Control getInstance()
@@ -53,7 +54,7 @@ public class Control
     	for (int i = 0; i < clientes.size(); i++) //Esto recorre la lista de productos uno por uno
         {
         	
-            if (clientes.get(i).getIdCliente() == idCliente ) 
+            if (clientes.get(i).getIdCliente().equals(idCliente)) 
             {
                 return clientes.get(i); 
             }
@@ -200,6 +201,10 @@ public class Control
     	
     }
 
+    public List<OrdenCompra> obtenerListadoOrdenes()
+    {
+        return new ArrayList<>(ordenes.values());
+    }
     
     public Map<Integer, String> obtenerListadoOrdenesCliente(String idCliente)
     {
@@ -277,5 +282,89 @@ public class Control
     	
     }
 
-   
+    public void crearDetalleCompra(int idOrden, int idProducto, double cantidad) throws Exception
+    {
+    	
+    	 OrdenCompra orden = buscarOrdenCompra(idOrden);
+    	 Producto producto = buscarProducto(idProducto);
+
+    	 if (cantidad <= 0)
+    	 {
+    		 throw new Exception("La cantidad debe ser mayor a 0");
+    	 }
+
+    	 if (producto.getDisponible() < cantidad)
+    	 {
+    		 throw new Exception("Cantidad de productos disponibles no son suficientes");
+    	 }
+
+    	 orden.getDetalles().add(new DetallesDeCompra(producto, cantidad));
+    }
+    
+    
+    public void eliminarProductoDeOrden(int idOrden, int idProducto) throws Exception
+    {
+
+    	
+    	OrdenCompra orden = buscarOrdenCompra(idOrden);
+
+        List<DetallesDeCompra> detalles = orden.getDetalles();
+        
+        for (int i = 0; i < detalles.size(); i++)
+        {
+            DetallesDeCompra d = detalles.get(i);
+
+            detalles.remove(i);
+            return;
+            
+        }
+
+        throw new Exception("Producto no encontrado en la orden");
+    	
+    	
+    }
+
+    public double calcularTotal(int idOrden) throws Exception
+    {
+    	OrdenCompra orden = buscarOrdenCompra(idOrden);
+        return orden.total();
+    }
+
+    public double calcularImpuestos(int idOrden) throws Exception
+    {
+    	OrdenCompra orden = buscarOrdenCompra(idOrden);
+        return orden.impuesto();
+    }
+
+    public double totalConImpuestos(int idOrden) throws Exception
+    {
+    	OrdenCompra orden = buscarOrdenCompra(idOrden);
+        return orden.totalConImpuesto();
+    }
+
+    
+    public String mostrarProductosAgregadosAOrden(int idOrden) throws Exception
+    {
+    	OrdenCompra orden = buscarOrdenCompra(idOrden);
+
+        List<DetallesDeCompra> detalles = orden.getDetalles();
+
+        String resultado = "";
+        
+        for (int i = 0; i < detalles.size(); i++)
+        {
+        	
+            DetallesDeCompra d = detalles.get(i);
+            
+            
+
+            resultado +=  "Producto: " + d.getProducto().getNombreProducto() + "\n"
+                      + "Cantidad: " + d.getCantidad()
+                      + " | Total: " + (d.getProducto().getPrecio() * d.getCantidad())
+                      + "\n";
+            
+        }
+
+        return resultado;
+    }
 }

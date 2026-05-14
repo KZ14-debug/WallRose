@@ -13,7 +13,7 @@ public class DetallesDeCompra {
 	public double getCantidad() {
 		return cantidad;
 	}
-
+	
 	public Producto getProducto() {
         return producto;
     }
