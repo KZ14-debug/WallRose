@@ -256,6 +256,18 @@ public class Control
         return resultado;
     }
 
+	public void establecerOrdenIniciada(int idOrden) throws Exception
+    {
+
+    	if (!ordenes.containsKey(idOrden))
+        {
+            throw new Exception("Orden no encontrada");
+        }
+
+        OrdenCompra orden = ordenes.get(idOrden);
+        orden.setEstadoDeCompra("Iniciada");
+    	
+    }
     public void establecerOrdenPendiente(int idOrden) throws Exception
     {
 
